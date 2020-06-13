@@ -4,8 +4,11 @@ import {
   Input,
   ElementRef,
   ChangeDetectionStrategy,
+  Optional,
+  Inject,
 } from '@angular/core';
-import { DinosaurIconsService } from './dinosaur-icons.service';
+import { DinosaurIconRegistry } from './dinosaur-icon-registry';
+import { DOCUMENT } from '@angular/common';
 
 @Component({
   selector: 'lib-dinosaur-icons',
@@ -22,16 +25,33 @@ import { DinosaurIconsService } from './dinosaur-icons.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DinosaurIconsComponent implements OnInit {
-  @Input() name: string;
+  @Input() set name(iconName: string) {
+    if (this.svgIcon) {
+      this.elementRef.nativeElement.removeChild(this.svgIcon);
+    }
+
+    const svgData = this.dinosaurRegistry.getIcon(iconName);
+    this.svgIcon = this.createElementFromString(svgData);
+    this.elementRef.nativeElement.appendChild(this.svgIcon);
+  }
+
+  private svgIcon: SVGElement;
 
   constructor(
-    private dinosaurService: DinosaurIconsService,
-    private elementRef: ElementRef
+    private dinosaurRegistry: DinosaurIconRegistry,
+    private elementRef: ElementRef,
+    @Optional() @Inject(DOCUMENT) private document: Document
   ) {}
 
-  ngOnInit() {
-    this.elementRef.nativeElement.innerHTML = this.dinosaurService.get(
-      this.name
+  ngOnInit() {}
+
+  private createElementFromString(content: string): SVGElement {
+    const div = this.document.createElement('div');
+    div.innerHTML = content;
+
+    return (
+      div.querySelector('svg') ||
+      this.document.createElementNS('http://www.w3.org/2000/svg', 'path')
     );
   }
 }
