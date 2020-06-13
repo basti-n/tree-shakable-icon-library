@@ -17,7 +17,15 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "paths": {
+      "dinosaur-icons": [
+        "dist/dinosaur-icons"
+      ],
+      "dinosaur-icons/*": [
+        "dist/dinosaur-icons/*"
+      ]
+    }
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,
