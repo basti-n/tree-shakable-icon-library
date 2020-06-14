@@ -40,7 +40,7 @@ export class DinosaurIconsComponent implements OnInit {
   constructor(
     private dinosaurRegistry: DinosaurIconRegistry,
     private elementRef: ElementRef,
-    @Optional() @Inject(DOCUMENT) private document: Document
+    @Optional() @Inject(DOCUMENT) private document: any
   ) {}
 
   ngOnInit() {}
